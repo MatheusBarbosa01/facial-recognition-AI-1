@@ -1,6 +1,8 @@
 import os
 import pandas as pd
+import cv2
 from datetime import datetime
+from deepface import DeepFace
 
 TRAIN_DIR = "./train_images"
 ATTENDANCE_FILE = "attendance.csv"
@@ -38,3 +40,31 @@ def mark_attendance(name):
     if not ((df['Name'] == name) & (df['Timestamp'].str.contains(dt_string.split(' ')[0]))).any():
         df = pd.concat([df, pd.DataFrame([attendance_data])], ignore_index=True)
         df.to_csv(ATTENDANCE_FILE,index=False)
+
+# Função para reconhecimento facial
+def recognize_face(frame):
+    rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    faces = DeepFace.extract_faces(img_path=rgb_frame, enforce_detection=False)
+
+    for face in faces:
+        face_image = face['face']
+
+        name = "Unknown"
+        for idx, known_face in enumerate(known_face_encodings):
+            result = DeepFace.verify(img1_path=face_image, img2_path=known_face, enforce_detection=False)
+            if result["verified"]:
+                name = known_face_names[idx]
+                break
+
+        if name != "Unknown":
+            mark_attendance(name)
+
+        facial_area = face['facial_area']
+        x, y, w, h = facial_area['x'], facial_area['y'], facial_area['w'], facial_area['h']
+        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
+        cv2.rectangle(frame, (x, y - 35), (x + w, y), (0, 0, 255), cv2.FILLED)
+        font = cv2.FONT_HERSHEY_DUPLEX
+        cv2.putText(frame, name, (x + 6, y - 6), font, 1.0, (255, 255, 255), 1)
+
+    return frame
+
