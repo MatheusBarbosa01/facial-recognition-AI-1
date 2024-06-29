@@ -3,6 +3,8 @@ import pandas as pd
 import cv2
 from datetime import datetime
 from deepface import DeepFace
+from PIL import Image, ImageTk
+import tkinter as tk
 
 TRAIN_DIR = "./train_images"
 ATTENDANCE_FILE = "attendance.csv"
@@ -68,3 +70,34 @@ def recognize_face(frame):
 
     return frame
 
+# Função para iniciar a webcam e reconhecimento facial
+def start_recognition():
+    cap = cv2.VideoCapture(0)
+
+    def update_frame():
+        ret, frame = cap.read()
+        if ret:
+            frame = recognize_face(frame)
+            cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
+            img = Image.fromarray(cv2image)
+            imgtk = ImageTk.PhotoImage(image=img)
+            lmain.imgtk = imgtk
+            lmain.configure(image=imgtk)
+        lmain.after(10, update_frame)
+
+    update_frame()
+
+# Inicializar o arquivo de presença
+initialize_attendance_file()
+
+# Configuração da interface gráfica
+root = tk.Tk()
+root.title("Reconhecimento Facial")
+
+recognize_button = tk.Button(root, text="Iniciar Reconhecimento Facial", command=start_recognition)
+recognize_button.pack(pady=20)
+
+lmain = tk.Label(root)
+lmain.pack()
+
+root.mainloop()
