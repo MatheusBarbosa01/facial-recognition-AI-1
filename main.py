@@ -43,6 +43,13 @@ def mark_attendance(name):
         df = pd.concat([df, pd.DataFrame([attendance_data])], ignore_index=True)
         df.to_csv(ATTENDANCE_FILE,index=False)
 
+# Função para verificar a vivacidade
+def is_live_face(face_image):
+    # Use DeepFace to analyze the face
+    analysis = DeepFace.analyze(face_image, actions=['emotion'], enforce_detection=False)
+    # If DeepFace returns a face, consider it live (this is a simplified approach)
+    return len(analysis) > 0
+
 # Função para reconhecimento facial
 def recognize_face(frame):
     rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -50,6 +57,9 @@ def recognize_face(frame):
 
     for face in faces:
         face_image = face['face']
+
+        if not is_live_face(face_image):
+            continue
 
         name = "Unknown"
         for idx, known_face in enumerate(known_face_encodings):
