@@ -15,11 +15,14 @@ def load_train_images(TRAIN_DIR):
     known_face_encodings = []
     known_face_names = []
 
-    for filename in os.listdir(TRAIN_DIR):
-        if filename.endswith(".jpg") or filename.endswith(".png"):
-            image_path = os.path.join(TRAIN_DIR, filename)
-            known_face_names.append(os.path.splitext(filename)[0])
-            known_face_encodings.append(image_path)
+    for person_name in os.listdir(TRAIN_DIR):
+        person_dir = os.path.join(TRAIN_DIR, person_name)
+        if os.path.isdir(person_dir):
+            for filename in os.listdir(person_dir):
+                if filename.endswith(".jpg") or filename.endswith(".png"):
+                    image_path = os.path.join(person_dir, filename)
+                    known_face_names.append(person_name)
+                    known_face_encodings.append(image_path)
 
     return known_face_encodings, known_face_names
 
@@ -111,3 +114,4 @@ lmain = tk.Label(root)
 lmain.pack()
 
 root.mainloop()
+
