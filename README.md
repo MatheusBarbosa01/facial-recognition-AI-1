@@ -21,3 +21,7 @@ Você pode instalar as dependências necessárias usando `pip`:
 ```bash
 pip install deepface opencv-python pandas pillow 
 pip install tf-keras
+```
+### Como rodar
+```bash
+Você deve: ir até o arquivo "main.py"(após a instalação das dependências), e passar o comando no terminal "python main.py"
