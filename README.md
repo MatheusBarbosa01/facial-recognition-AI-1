@@ -6,7 +6,7 @@ Este projeto é um sistema de controle de presença utilizando reconhecimento fa
 
 Certifique-se de instalar as seguintes dependências antes de rodar o projeto:
 
-1. **Python 3.x**: O projeto é escrito em Python e requer Python 3.x para rodar.
+1. **Python 3.12.4**: O projeto é escrito em Python e requer Python 3.x para rodar.
 2. **DeepFace**: Uma biblioteca leve de reconhecimento facial e análise de atributos faciais para Python.
 3. **OpenCV**: Uma biblioteca de visão computacional de código aberto.
 4. **Pandas**: Uma biblioteca poderosa para manipulação e análise de dados em Python.
